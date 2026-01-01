@@ -6,7 +6,7 @@ quantity-input * {
 quantity-input {
   display: inline-flex;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   overflow: hidden;
   width: 7rem;
   height: 2.5rem;
@@ -22,9 +22,9 @@ quantity-input button {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0px;
+  padding: 0;
   font-size: 1rem;
-  line-height: 0px;
+  line-height: 0;
 }
 
 quantity-input button:hover {
@@ -42,7 +42,7 @@ quantity-input input {
   border: none;
   text-align: center;
   font-size: 1rem;
-  padding: 0px 0.25rem;
+  padding: 0 0.25rem;
 }
 
 quantity-input input:focus {

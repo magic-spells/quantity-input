@@ -47,17 +47,17 @@ You provide your own markup inside the component. The component looks for:
 - An `input` element for the quantity value
 
 ```html
-<!-- Basic usage -->
+<!-- Basic usage (defaults to value=1, min=1) -->
 <quantity-input>
   <button data-action-decrement type="button">−</button>
-  <input type="number" value="1" />
+  <input type="number" />
   <button data-action-increment type="button">+</button>
 </quantity-input>
 
 <!-- With custom min/max/value -->
 <quantity-input min="1" max="10" value="5">
   <button data-action-decrement type="button">−</button>
-  <input type="number" value="5" />
+  <input type="number" />
   <button data-action-increment type="button">+</button>
 </quantity-input>
 
@@ -66,12 +66,14 @@ You provide your own markup inside the component. The component looks for:
   <button data-action-decrement type="button">
     <svg><!-- your minus icon --></svg>
   </button>
-  <input type="number" value="50" />
+  <input type="number" />
   <button data-action-increment type="button">
     <svg><!-- your plus icon --></svg>
   </button>
 </quantity-input>
 ```
+
+Note: The `value` attribute on the inner `<input>` is optional and will be overwritten by the component. Set the value on the `<quantity-input>` element instead.
 
 ## How It Works
 
@@ -116,23 +118,27 @@ Your markup inside the component must include:
 The component provides complete styling control. Style the content elements however you like:
 
 ```css
-/* Basic styling */
+/* Basic styling (uses rems for scalability) */
 quantity-input {
   display: inline-flex;
-  align-items: center;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   overflow: hidden;
+  width: 7rem;
+  height: 2.5rem;
 }
 
 quantity-input button {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 100%;
   background: #f8f9fa;
   border: none;
-  padding: 8px 12px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1rem;
 }
 
 quantity-input button:hover {
@@ -140,11 +146,13 @@ quantity-input button:hover {
 }
 
 quantity-input input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
   border: none;
-  padding: 8px 12px;
   text-align: center;
-  width: 60px;
-  font-size: 14px;
+  font-size: 1rem;
+  padding: 0 0.25rem;
 }
 ```
 
@@ -239,7 +247,7 @@ new CartManager();
 
   <quantity-input min="1" max="10" value="2">
     <button data-action-decrement type="button">−</button>
-    <input type="number" value="2" />
+    <input type="number" />
     <button data-action-increment type="button">+</button>
   </quantity-input>
 
@@ -265,7 +273,7 @@ function ProductQuantity({ min = 1, max = 99, value = 1, onChange }) {
       onQuantity-inputChange={handleQuantityChange}
     >
       <button data-action-decrement type="button">−</button>
-      <input type="number" defaultValue={value} />
+      <input type="number" />
       <button data-action-increment type="button">+</button>
     </quantity-input>
   );
@@ -283,7 +291,7 @@ function ProductQuantity({ min = 1, max = 99, value = 1, onChange }) {
     @quantity-input:change="handleQuantityChange"
   >
     <button data-action-decrement type="button">−</button>
-    <input type="number" :value="quantity" />
+    <input type="number" />
     <button data-action-increment type="button">+</button>
   </quantity-input>
 </template>

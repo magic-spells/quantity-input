@@ -1,6 +1,6 @@
 {
 	"name": "@magic-spells/quantity-input",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Quantity input web component.",
 	"author": "Cory Schulz",
 	"license": "MIT",

@@ -37,10 +37,10 @@ This is a Web Component library for e-commerce quantity controls, built as a Cus
 - **Developer provides markup**: The component expects buttons with `data-action-decrement`/`data-action-increment` and an `input` element
 
 ### Key Behaviors
-- **DOM caching**: `queryDOM()` caches button and input references in private fields for performance
+- **DOM caching**: `connectedCallback` caches button and input references in `#elements` private field
 - **Input clamping**: Automatically constrains values between min/max bounds
 - **Memory management**: Properly removes event listeners in `disconnectedCallback`
-- **Accessibility**: Uses proper ARIA labels and semantic HTML
+- **Value sync**: The component reads `value` from `<quantity-input value="X">` and syncs to inner input
 
 ### Build System
 Rollup configuration generates:
@@ -48,7 +48,13 @@ Rollup configuration generates:
 - `dist/quantity-input.cjs.js` - CommonJS
 - `dist/quantity-input.js` - UMD
 - `dist/quantity-input.min.js` - Minified UMD
+- `dist/quantity-input.css` - Optional default styles
 - Development mode copies built files to `demo/` directory
+
+### Styling
+- Optional CSS file at `src/quantity-input.css` with sensible defaults
+- All sizing uses `rem` units for scalability (font-size, padding, dimensions)
+- Uses flexbox layout with `min-width: 0` on input to prevent overflow
 
 ### Demo & Testing
 - Live demo at `demo/index.html` showcases various configurations
@@ -56,7 +62,8 @@ Rollup configuration generates:
 - Multiple instances test component isolation
 
 ## Publishing Notes
-- Package exports both named (`QuantityInput`) and default exports
+- Package exports default only (`export default QuantityInput`)
 - Uses `sideEffects: true` due to custom element registration
 - Files array includes both `src/` and `dist/` directories
 - NPM registry: `@magic-spells/quantity-input`
+- TypeScript types at `src/quantity-input.d.ts`
