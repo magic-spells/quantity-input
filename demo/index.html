@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Quantity Input Demo</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				max-width: 800px;
+				margin: 2rem auto;
+				padding: 0 1rem;
+			}
+
+			.demo-section {
+				margin-bottom: 2rem;
+				padding: 1rem;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+			}
+
+			.demo-section h3 {
+				margin-top: 0;
+			}
+
+			quantity-input {
+				display: inline-flex;
+				align-items: center;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				overflow: hidden;
+				margin: 0.5rem;
+			}
+
+			quantity-input button {
+				background: #f8f9fa;
+				border: none;
+				padding: 10px 12px;
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			quantity-input button:hover {
+				background: #e9ecef;
+			}
+
+			quantity-input button:active {
+				background: #dee2e6;
+			}
+
+			quantity-input button svg {
+				width: 12px;
+				height: 12px;
+				color: #666;
+			}
+
+			quantity-input input {
+				border: none;
+				padding: 8px 12px;
+				text-align: center;
+				width: 60px;
+				font-size: 14px;
+				-moz-appearance: textfield;
+			}
+
+			quantity-input input::-webkit-outer-spin-button,
+			quantity-input input::-webkit-inner-spin-button {
+				-webkit-appearance: none;
+				margin: 0;
+			}
+
+			quantity-input input:focus {
+				outline: none;
+				background: #f8f9fa;
+			}
+
+			.event-log {
+				background: #f8f9fa;
+				padding: 1rem;
+				border-radius: 4px;
+				font-family: monospace;
+				font-size: 12px;
+				max-height: 200px;
+				overflow-y: auto;
+				margin-top: 1rem;
+			}
+
+			.code-example {
+				background: #f8f9fa;
+				padding: 1rem;
+				border-radius: 4px;
+				font-family: monospace;
+				font-size: 14px;
+				margin-top: 1rem;
+				white-space: pre-wrap;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Quantity Input Demo</h1>
+
+		<div class="demo-section">
+			<h3>Default Settings</h3>
+			<p>Default min=1, value=1</p>
+			<quantity-input>
+				<button data-action-decrement type="button">−</button>
+				<input type="number" value="1" />
+				<button data-action-increment type="button">+</button>
+			</quantity-input>
+			<div class="code-example">&lt;quantity-input&gt;
+  &lt;button data-action-decrement type="button"&gt;−&lt;/button&gt;
+  &lt;input type="number" value="1" /&gt;
+  &lt;button data-action-increment type="button"&gt;+&lt;/button&gt;
+&lt;/quantity-input&gt;</div>
+		</div>
+
+		<div class="demo-section">
+			<h3>Custom Min/Max</h3>
+			<p>Min=5, Max=15, Value=10</p>
+			<quantity-input min="5" max="15" value="10">
+				<button data-action-decrement type="button">−</button>
+				<input type="number" value="10" />
+				<button data-action-increment type="button">+</button>
+			</quantity-input>
+			<div class="code-example">&lt;quantity-input min="5" max="15" value="10"&gt;
+  &lt;button data-action-decrement type="button"&gt;−&lt;/button&gt;
+  &lt;input type="number" value="10" /&gt;
+  &lt;button data-action-increment type="button"&gt;+&lt;/button&gt;
+&lt;/quantity-input&gt;</div>
+		</div>
+
+		<div class="demo-section">
+			<h3>Custom Icons</h3>
+			<p>You can use any icons for the buttons</p>
+			<quantity-input min="0" max="100" value="50">
+				<button data-action-decrement type="button">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+						<path fill="currentColor" d="M368 224H16c-8.84 0-16 7.16-16 16v32c0 8.84 7.16 16 16 16h352c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16z"></path>
+					</svg>
+				</button>
+				<input type="number" value="50" />
+				<button data-action-increment type="button">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+						<path fill="currentColor" d="M368 224H224V80c0-8.84-7.16-16-16-16h-32c-8.84 0-16 7.16-16 16v144H16c-8.84 0-16 7.16-16 16v32c0 8.84 7.16 16 16 16h144v144c0 8.84 7.16 16 16 16h32c8.84 0 16-7.16 16-16V288h144c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16z"></path>
+					</svg>
+				</button>
+			</quantity-input>
+		</div>
+
+		<div class="demo-section">
+			<h3>Multiple Instances</h3>
+			<p>Testing multiple components on the same page:</p>
+			<quantity-input min="1" max="5" value="2">
+				<button data-action-decrement type="button">−</button>
+				<input type="number" value="2" />
+				<button data-action-increment type="button">+</button>
+			</quantity-input>
+			<quantity-input min="10" max="20" value="15">
+				<button data-action-decrement type="button">−</button>
+				<input type="number" value="15" />
+				<button data-action-increment type="button">+</button>
+			</quantity-input>
+			<quantity-input min="1" max="3" value="1">
+				<button data-action-decrement type="button">−</button>
+				<input type="number" value="1" />
+				<button data-action-increment type="button">+</button>
+			</quantity-input>
+		</div>
+
+		<div class="demo-section">
+			<h3>Event Logging</h3>
+			<p>Watch the console or the log below for quantity-input:change events:</p>
+			<quantity-input min="1" max="10" value="5" id="event-demo">
+				<button data-action-decrement type="button">−</button>
+				<input type="number" value="5" />
+				<button data-action-increment type="button">+</button>
+			</quantity-input>
+			<div class="event-log" id="eventLog">Event log will appear here...</div>
+		</div>
+
+		<script type="module" src="quantity-input.esm.js"></script>
+		<script>
+			// Event logging demo
+			const eventDemo = document.getElementById('event-demo');
+			const eventLog = document.getElementById('eventLog');
+
+			eventDemo.addEventListener('quantity-input:change', (e) => {
+				const timestamp = new Date().toLocaleTimeString();
+				const logEntry = `[${timestamp}] quantity-input:change: ${e.detail.value}`;
+				console.log(logEntry);
+
+				// Add to visual log
+				const div = document.createElement('div');
+				div.textContent = logEntry;
+				eventLog.appendChild(div);
+				eventLog.scrollTop = eventLog.scrollHeight;
+			});
+
+			// Clear log initially
+			eventLog.innerHTML = '';
+
+			// Listen to all quantity inputs for console logging
+			document.addEventListener('quantity-input:change', (e) => {
+				if (e.target !== eventDemo) {
+					console.log('Quantity changed:', e.detail.value, 'from element:', e.target);
+				}
+			});
+		</script>
+	</body>
+</html>
