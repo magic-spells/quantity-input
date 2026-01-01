@@ -7,6 +7,7 @@ A professional, highly-customizable Web Component for creating intuitive quantit
 ## Features
 
 - **Full markup control** - You provide the HTML structure and icons
+- **Optional default styles** - Import ready-made CSS or write your own
 - **Configurable constraints** - Set min/max values and default quantities
 - **Event-driven architecture** - Clean separation between UI and logic
 - **Zero dependencies** - Pure Web Components
@@ -24,12 +25,18 @@ npm install @magic-spells/quantity-input
 ```javascript
 // Import the component
 import '@magic-spells/quantity-input';
+
+// Optional: import default styles
+import '@magic-spells/quantity-input/styles';
 ```
 
 Or include directly in your HTML:
 
 ```html
 <script src="https://unpkg.com/@magic-spells/quantity-input"></script>
+
+<!-- Optional: default styles -->
+<link rel="stylesheet" href="https://unpkg.com/@magic-spells/quantity-input/dist/quantity-input.css">
 ```
 
 ## Usage

@@ -1,0 +1,50 @@
+quantity-input,
+quantity-input * {
+  box-sizing: border-box;
+}
+
+quantity-input {
+  display: inline-flex;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: hidden;
+  width: 7rem;
+  height: 2.5rem;
+}
+
+quantity-input button {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 100%;
+  background: #f8f9fa;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px;
+  font-size: 1rem;
+  line-height: 0px;
+}
+
+quantity-input button:hover {
+  background: #e9ecef;
+}
+
+quantity-input button:active {
+  background: #dee2e6;
+}
+
+quantity-input input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  text-align: center;
+  font-size: 1rem;
+  padding: 0px 0.25rem;
+}
+
+quantity-input input:focus {
+  outline: none;
+}

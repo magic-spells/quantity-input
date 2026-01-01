@@ -1,5 +1,6 @@
 **/*.min.js
 assets/
+demo/
 node_modules/
 README.md
 CLAUDE.md

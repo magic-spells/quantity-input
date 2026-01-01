@@ -15,7 +15,10 @@ export default [
 			format: 'es',
 			sourcemap: true,
 		},
-		plugins: [resolve()],
+		plugins: [
+			resolve(),
+			copy({ targets: [{ src: 'src/quantity-input.css', dest: 'dist' }] }),
+		],
 	},
 	// CommonJS build
 	{
@@ -71,22 +74,19 @@ export default [
 					plugins: [
 						resolve(),
 						serve({
-							contentBase: ['dist', 'demo'],
+							contentBase: ['src', 'dist', 'demo'],
 							open: true,
 							port: 3000,
 						}),
 						copy({
 							targets: [
-								{
-									src: `dist/${name}.esm.js`,
-									dest: 'demo',
-								},
-								{
-									src: `dist/${name}.esm.js.map`,
-									dest: 'demo',
-								},
+								{ src: `dist/${name}.esm.js`, dest: 'demo' },
+								{ src: `dist/${name}.esm.js.map`, dest: 'demo' },
+								{ src: `src/${name}.css`, dest: 'demo' },
+								{ src: `src/${name}.css`, dest: 'dist' },
 							],
 							hook: 'writeBundle',
+							copyOnce: false,
 						}),
 					],
 				},

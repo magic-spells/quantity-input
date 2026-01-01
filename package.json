@@ -1,6 +1,6 @@
 {
 	"name": "@magic-spells/quantity-input",
-	"version": "0.2.0",
+	"version": "1.0.0",
 	"description": "Quantity input web component.",
 	"author": "Cory Schulz",
 	"license": "MIT",
@@ -15,7 +15,8 @@
 			"import": "./dist/quantity-input.esm.js",
 			"require": "./dist/quantity-input.cjs.js",
 			"default": "./dist/quantity-input.esm.js"
-		}
+		},
+		"./styles": "./dist/quantity-input.css"
 	},
 	"sideEffects": true,
 	"repository": {
@@ -29,9 +30,10 @@
 	"keywords": [
 		"quantity-input",
 		"web-components",
-		"quantity-input",
+		"custom-elements",
 		"e-commerce",
-		"custom-elements"
+		"stepper",
+		"number-input"
 	],
 	"files": [
 		"dist/",
