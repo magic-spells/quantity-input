@@ -1,24 +1,29 @@
+quantity-input, quantity-input * {
+  box-sizing: border-box;
+}
+
 quantity-input {
-  display: inline-flex;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: .25rem;
+  width: 7rem;
+  height: 2.5rem;
+  display: inline-flex;
   overflow: hidden;
-  width: 120px;
-  height: 40px;
 }
 
 quantity-input button {
-  flex-shrink: 0;
-  width: 32px;
-  height: 100%;
+  cursor: pointer;
   background: #f8f9fa;
   border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
+  flex-shrink: 0;
   justify-content: center;
-  padding: 0px;
+  align-items: center;
+  width: 2rem;
+  height: 100%;
+  padding: 0;
   font-size: 1rem;
+  line-height: 0;
+  display: flex;
 }
 
 quantity-input button:hover {
@@ -30,13 +35,13 @@ quantity-input button:active {
 }
 
 quantity-input input {
-  flex: 1;
-  min-width: 32px;
-  height: 100%;
-  border: none;
   text-align: center;
+  border: none;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0 .25rem;
   font-size: 1rem;
-  padding: 0px 8px;
 }
 
 quantity-input input:focus {
