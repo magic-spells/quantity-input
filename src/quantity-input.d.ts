@@ -10,6 +10,7 @@ declare class QuantityInput extends HTMLElement {
     decrement: () => void;
     increment: () => void;
     inputChange: (e: Event) => void;
+    inputKeydown: (e: KeyboardEvent) => void;
   };
 }
 
