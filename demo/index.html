@@ -98,6 +98,37 @@
 		</div>
 
 		<div class="demo-section">
+			<h3>Step</h3>
+			<p>Min=0, Max=20, Value=0, Step=5 — buttons move by 5 and clamp at both ends</p>
+			<quantity-input id="step-demo" min="0" max="20" value="0" step="5">
+				<button data-action-decrement type="button">−</button>
+				<input type="number" />
+				<button data-action-increment type="button">+</button>
+			</quantity-input>
+			<div class="code-example">&lt;quantity-input min="0" max="20" value="0" step="5"&gt;
+  &lt;button data-action-decrement type="button"&gt;−&lt;/button&gt;
+  &lt;input type="number" /&gt;
+  &lt;button data-action-increment type="button"&gt;+&lt;/button&gt;
+&lt;/quantity-input&gt;</div>
+		</div>
+
+		<div class="demo-section">
+			<h3>Disabled</h3>
+			<p>Buttons and the input are inert while the host carries <code>disabled</code></p>
+			<quantity-input id="disabled-demo" min="1" max="10" value="3" disabled>
+				<button data-action-decrement type="button">−</button>
+				<input type="number" />
+				<button data-action-increment type="button">+</button>
+			</quantity-input>
+			<button type="button" id="toggle-disabled">Toggle disabled</button>
+			<div class="code-example">&lt;quantity-input min="1" max="10" value="3" disabled&gt;
+  &lt;button data-action-decrement type="button"&gt;−&lt;/button&gt;
+  &lt;input type="number" /&gt;
+  &lt;button data-action-increment type="button"&gt;+&lt;/button&gt;
+&lt;/quantity-input&gt;</div>
+		</div>
+
+		<div class="demo-section">
 			<h3>Custom Icons</h3>
 			<p>You can use any icons for the buttons</p>
 
@@ -171,6 +202,12 @@
 
 			// Clear log initially
 			eventLog.innerHTML = '';
+
+			// Disabled toggle demo
+			const disabledDemo = document.getElementById('disabled-demo');
+			document.getElementById('toggle-disabled').addEventListener('click', () => {
+				disabledDemo.disabled = !disabledDemo.disabled;
+			});
 
 			// Listen to all quantity inputs for console logging
 			document.addEventListener('quantity-input:change', (e) => {
