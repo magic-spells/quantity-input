@@ -14,6 +14,7 @@ class QuantityInput extends HTMLElement {
       decrement: () => _.#handleStep(-1),
       increment: () => _.#handleStep(1),
       inputChange: (e) => _.#handleInputChange(e),
+      inputKeydown: (e) => _.#handleKeydown(e),
     };
     QuantityInput.#injectStyles();
   }
@@ -54,6 +55,7 @@ class QuantityInput extends HTMLElement {
     _.#elements.dec?.[method]('click', _.handlers.decrement);
     _.#elements.inc?.[method]('click', _.handlers.increment);
     _.#elements.input?.[method]('change', _.handlers.inputChange);
+    _.#elements.input?.[method]('keydown', _.handlers.inputKeydown);
   }
 
   #clamp(v) {
@@ -62,6 +64,15 @@ class QuantityInput extends HTMLElement {
   }
 
   #handleStep(delta) { this.#updateValue(this.#clamp(this.value + delta)); }
+
+  // Enter would implicitly submit an enclosing form (navigating the page, or closing
+  // a <dialog>), so swallow it and commit the value instead. A change event that
+  // follows is a no-op: #updateValue bails when the value is already current.
+  #handleKeydown(e) {
+    if (e.key !== 'Enter' || e.isComposing) return;
+    e.preventDefault();
+    this.#handleInputChange(e);
+  }
 
   #handleInputChange(e) {
     const v = parseInt(e.target.value);
