@@ -1,6 +1,21 @@
-**/*.min.js
-assets/
-demo/
 node_modules/
-README.md
-CLAUDE.md
+demo/
+assets/
+**/*.min.js
+
+# Markdown is hand-formatted — prettier rewraps prose and reflows tables
+**/*.md
+
+# Config files are hand-formatted and hand-commented
+**/*.config.js
+**/*.config.mjs
+**/*.config.cjs
+**/*.config.ts
+package.json
+package-lock.json
+tsconfig*.json
+.prettierrc
+.prettierignore
+.eslintignore
+.gitignore
+.gitattributes
