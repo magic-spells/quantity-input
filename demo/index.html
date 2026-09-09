@@ -2,219 +2,1009 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Quantity Input Demo</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Quantity Input — @magic-spells</title>
+
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap"
+			rel="stylesheet" />
 		<link rel="stylesheet" href="quantity-input.css" />
+
 		<style>
-			*,
-			*::before,
-			*::after {
+			:root {
+				--bg-deep: #08070d;
+				--bg-card: #100f18;
+				--bg-card-hover: #16151f;
+				--border: #1e1c2a;
+				--border-accent: #2b2839;
+				--violet: #a78bfa;
+				--violet-dim: #6d5bcf;
+				--violet-glow: rgba(167, 139, 250, 0.12);
+				--cream: #f3f1fa;
+				--cream-dim: #b8b3cc;
+				--text: #e4e1ee;
+				--text-dim: #8b869c;
+				--font-display: 'Cormorant Garamond', Georgia, serif;
+				--font-body: 'Outfit', system-ui, sans-serif;
+			}
+
+			* {
 				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+
+			html {
+				background: var(--bg-deep);
 			}
 
 			body {
-				font-family: Arial, sans-serif;
-				max-width: 800px;
-				margin: 2rem auto;
-				padding: 0 1rem;
+				font-family: var(--font-body);
+				font-weight: 300;
+				color: var(--text);
+				background: var(--bg-deep);
+				overflow-x: hidden;
+				-webkit-font-smoothing: antialiased;
+			}
+
+			/* ---- Noise overlay ---- */
+			body::before {
+				content: '';
+				position: fixed;
+				inset: 0;
+				z-index: 9999;
+				pointer-events: none;
+				opacity: 0.025;
+				background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+				background-repeat: repeat;
+				background-size: 256px;
+			}
+
+			/* ---- Hero ---- */
+			.hero {
+				position: relative;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				padding: 5rem 2rem 3rem;
+				text-align: center;
+				overflow: hidden;
+			}
+
+			.hero::before {
+				content: '';
+				position: absolute;
+				top: -40%;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 900px;
+				height: 900px;
+				max-width: 90%;
+				max-height: 90%;
+				background: radial-gradient(ellipse, var(--violet-glow) 0%, transparent 70%);
+				pointer-events: none;
+			}
+
+			.hero-badge {
+				position: relative;
+				font-family: var(--font-body);
+				font-weight: 400;
+				font-size: 0.7rem;
+				letter-spacing: 0.25em;
+				text-transform: uppercase;
+				color: var(--violet);
+				border: 1px solid var(--border-accent);
+				padding: 0.4em 1.4em;
+				border-radius: 100px;
+				margin-bottom: 2.5rem;
+				text-decoration: none;
+				transition:
+					border-color 0.3s ease,
+					color 0.3s ease;
+			}
+
+			.hero-badge:hover {
+				border-color: var(--violet-dim);
+				color: var(--cream);
+			}
+
+			.hero h1 {
+				position: relative;
+				font-family: var(--font-display);
+				font-weight: 300;
+				font-size: clamp(3rem, 9vw, 7.5rem);
+				line-height: 1.05;
+				color: var(--cream);
+				letter-spacing: -0.02em;
+				margin-bottom: 1.75rem;
+				max-width: 14ch;
+			}
+
+			.hero h1 em {
+				font-style: italic;
+				color: var(--violet);
+			}
+
+			.hero-tagline {
+				position: relative;
+				max-width: 540px;
+				font-size: 1.05rem;
+				line-height: 1.7;
+				color: var(--text);
+				text-wrap: pretty;
+			}
+
+			.hero-line {
+				width: 1px;
+				height: 80px;
+				background: linear-gradient(to bottom, var(--violet-dim), transparent);
+				margin-top: 3rem;
+			}
+
+			/* ---- Install banner ---- */
+			.install-banner,
+			.install-specs {
+				display: flex;
+				justify-content: center;
+				gap: 2.5rem;
+				flex-wrap: wrap;
+				margin: 0 auto 1.25rem;
+				max-width: 680px;
+				padding: 0 1.5rem;
+			}
+
+			.install-specs {
+				margin-bottom: 3rem;
+			}
+
+			.install-item {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 0.4rem;
+			}
+
+			.install-label {
+				font-size: 0.65rem;
+				font-weight: 400;
+				letter-spacing: 0.18em;
+				text-transform: uppercase;
+				color: var(--text-dim);
+			}
+
+			.install-value {
+				font-family: 'Courier New', monospace;
+				font-size: 0.88rem;
+				color: var(--cream);
+				background: var(--bg-card);
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				padding: 0.5em 1.2em;
+				user-select: all;
+				cursor: copy;
+				transition: border-color 0.3s ease;
+			}
+
+			.install-value:hover {
+				border-color: var(--violet-dim);
+			}
+
+			.install-size {
+				font-family: 'Courier New', monospace;
+				font-size: 0.88rem;
+				color: var(--violet);
+				padding: 0.5em 0;
+			}
+
+			.quick-start {
+				max-width: 720px;
+				margin: 0 auto 4rem;
+				padding: 0 1.5rem;
+			}
+
+			/* ---- Sections ---- */
+			.demos {
+				max-width: 1100px;
+				margin: 0 auto;
+				padding: 1rem 1.5rem 8rem;
+				display: flex;
+				flex-direction: column;
+				gap: 6rem;
 			}
 
 			.demo-section {
+				background: var(--bg-card);
+				border: 1px solid var(--border);
+				border-radius: 16px;
+				padding: 3rem 2.5rem;
+				transition:
+					border-color 0.4s ease,
+					background 0.4s ease;
+			}
+
+			.demo-section:hover {
+				border-color: var(--border-accent);
+				background: var(--bg-card-hover);
+			}
+
+			.demo-section h2 {
+				font-family: var(--font-display);
+				font-weight: 400;
+				font-size: clamp(2rem, 4vw, 3rem);
+				line-height: 1.1;
+				color: var(--cream);
+				letter-spacing: -0.01em;
+				margin-bottom: 1rem;
+			}
+
+			.demo-section h2 em {
+				font-style: italic;
+				color: var(--violet);
+			}
+
+			.demo-desc {
+				font-size: 1rem;
+				color: var(--text);
+				line-height: 1.7;
 				margin-bottom: 2rem;
-				padding: 1rem;
-				border: 1px solid #ddd;
+				max-width: 620px;
+			}
+
+			.demo-desc code {
+				font-family: 'Courier New', monospace;
+				font-size: 0.85em;
+				color: var(--violet);
+				background: rgba(0, 0, 0, 0.3);
+				padding: 0.1em 0.4em;
 				border-radius: 4px;
 			}
 
-			.demo-section h3 {
-				margin-top: 0;
+			.demo-stage {
+				background: linear-gradient(
+					135deg,
+					rgba(255, 255, 255, 0.01) 0%,
+					rgba(255, 255, 255, 0.03) 100%
+				);
+				border: 1px solid var(--border);
+				border-radius: 12px;
+				padding: 2.5rem 2.25rem;
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				gap: 1.25rem 2rem;
 			}
 
+			.demo-stage.stack {
+				flex-direction: column;
+				align-items: stretch;
+			}
+
+			.stage-label {
+				font-size: 0.65rem;
+				letter-spacing: 0.18em;
+				text-transform: uppercase;
+				color: var(--text-dim);
+				margin-bottom: 0.55rem;
+			}
+
+			.stage-item {
+				display: flex;
+				flex-direction: column;
+			}
+
+			/* ---- Component theming (demo-only — the shipped CSS is light) ---- */
 			quantity-input {
-				margin: 0.5rem 0;
+				border-color: var(--border-accent);
+				border-radius: 8px;
+				background: var(--bg-deep);
+			}
+
+			quantity-input button {
+				background: transparent;
+				color: var(--cream-dim);
+				font-family: var(--font-body);
+				transition:
+					background 0.2s ease,
+					color 0.2s ease;
+			}
+
+			quantity-input button:hover:not(:disabled) {
+				background: var(--violet-glow);
+				color: var(--violet);
+			}
+
+			quantity-input button:active:not(:disabled) {
+				background: rgba(167, 139, 250, 0.2);
 			}
 
 			quantity-input button svg {
-				width: 12px;
-				height: 12px;
-				color: #666;
+				width: 11px;
+				height: 11px;
 			}
 
+			quantity-input input {
+				background: transparent;
+				color: var(--cream);
+				font-family: 'Courier New', monospace;
+			}
+
+			/* ---- Controls ---- */
+			.controls {
+				display: flex;
+				gap: 0.75rem;
+				flex-wrap: wrap;
+				align-items: center;
+				margin-top: 1.75rem;
+			}
+
+			.btn,
+			button.btn {
+				font-family: var(--font-body);
+				font-weight: 400;
+				font-size: 0.7rem;
+				letter-spacing: 0.18em;
+				text-transform: uppercase;
+				color: var(--cream);
+				background: transparent;
+				border: 1px solid var(--border-accent);
+				padding: 0.7em 1.6em;
+				border-radius: 100px;
+				cursor: pointer;
+				transition: all 0.3s ease;
+			}
+
+			.btn:hover {
+				border-color: var(--violet-dim);
+				color: var(--violet);
+				box-shadow: 0 0 20px rgba(167, 139, 250, 0.1);
+			}
+
+			.btn:active {
+				transform: translateY(1px);
+			}
+
+			/* ---- Form demo ---- */
+			.form-row {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: flex-end;
+				gap: 1.25rem;
+			}
+
+			.text-field {
+				font-family: var(--font-body);
+				font-size: 0.95rem;
+				color: var(--cream);
+				background: var(--bg-deep);
+				border: 1px solid var(--border-accent);
+				border-radius: 8px;
+				height: 2.5rem;
+				padding: 0 0.9rem;
+				min-width: 0;
+				width: 14rem;
+			}
+
+			.text-field:focus {
+				outline: none;
+				border-color: var(--violet-dim);
+			}
+
+			.submit-note {
+				font-family: 'Courier New', monospace;
+				font-size: 0.8rem;
+				color: var(--text-dim);
+				margin-top: 1.5rem;
+			}
+
+			.submit-note b {
+				color: var(--violet);
+				font-weight: 400;
+			}
+
+			/* ---- Cart ---- */
+			.cart-line {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 1.5rem;
+				padding: 1rem 0;
+				border-top: 1px solid var(--border);
+			}
+
+			.cart-line:first-child {
+				border-top: none;
+				padding-top: 0;
+			}
+
+			.cart-name {
+				font-size: 0.95rem;
+				color: var(--cream);
+			}
+
+			.cart-price {
+				font-family: 'Courier New', monospace;
+				font-size: 0.8rem;
+				color: var(--text-dim);
+			}
+
+			.cart-total {
+				display: flex;
+				justify-content: space-between;
+				align-items: baseline;
+				border-top: 1px solid var(--border-accent);
+				padding-top: 1rem;
+				margin-top: 0.5rem;
+				font-family: 'Courier New', monospace;
+				font-size: 0.95rem;
+				color: var(--violet);
+			}
+
+			.cart-total span:first-child {
+				font-family: var(--font-body);
+				font-size: 0.65rem;
+				letter-spacing: 0.18em;
+				text-transform: uppercase;
+				color: var(--text-dim);
+			}
+
+			/* ---- Event log ---- */
 			.event-log {
-				background: #f8f9fa;
-				padding: 1rem;
-				border-radius: 4px;
-				font-family: monospace;
-				font-size: 12px;
-				max-height: 200px;
+				background: var(--bg-deep);
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				padding: 1rem 1.25rem;
+				margin-top: 1.75rem;
+				font-family: 'Courier New', monospace;
+				font-size: 0.78rem;
+				line-height: 1.9;
+				color: var(--text);
+				height: 9rem;
 				overflow-y: auto;
-				margin-top: 1rem;
 			}
 
-			.code-example {
-				background: #f8f9fa;
-				padding: 1rem;
+			.event-log:empty::before {
+				content: 'waiting for quantity-input:change…';
+				color: var(--text-dim);
+			}
+
+			.event-log b {
+				color: var(--violet);
+				font-weight: 400;
+			}
+
+			.event-log i {
+				color: var(--text-dim);
+				font-style: normal;
+			}
+
+			/* ---- Code block ---- */
+			.code-block {
+				background: var(--bg-deep);
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				padding: 1.25rem 1.5rem;
+				overflow-x: auto;
+				margin-top: 1.75rem;
+				font-family: 'Courier New', monospace;
+				font-size: 0.78rem;
+				line-height: 1.85;
+				color: var(--text);
+				white-space: pre;
+				-webkit-overflow-scrolling: touch;
+			}
+
+			.code-block-wide {
+				background: var(--bg-card);
+				border-radius: 12px;
+				padding: 1.75rem 2rem;
+				font-size: 0.82rem;
+				margin: 0;
+			}
+
+			.code-block .hl-tag {
+				color: var(--violet);
+			}
+			.code-block .hl-attr {
+				color: #9ad0c8;
+			}
+			.code-block .hl-val {
+				color: #d68a72;
+			}
+			.code-block .hl-cm {
+				color: var(--text-dim);
+				font-style: italic;
+			}
+
+			/* ---- Reference tables ---- */
+			.ref-heading {
+				font-weight: 400;
+				font-size: 0.7rem;
+				letter-spacing: 0.22em;
+				text-transform: uppercase;
+				color: var(--violet);
+				margin: 2.25rem 0 1rem;
+			}
+
+			.ref-heading:first-of-type {
+				margin-top: 0.5rem;
+			}
+
+			.ref-table {
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				overflow: hidden;
+				font-size: 0.85rem;
+			}
+
+			.ref-row {
+				display: grid;
+				grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 2fr);
+				gap: 1rem;
+				padding: 0.75rem 1.25rem;
+				border-top: 1px solid var(--border);
+				color: var(--text);
+				line-height: 1.55;
+				align-items: baseline;
+			}
+
+			.ref-row:first-child {
+				border-top: none;
+			}
+
+			.ref-row.ref-head {
+				background: rgba(0, 0, 0, 0.2);
+				font-size: 0.65rem;
+				letter-spacing: 0.18em;
+				text-transform: uppercase;
+				color: var(--cream-dim);
+			}
+
+			.ref-row code {
+				font-family: 'Courier New', monospace;
+				font-size: 0.78rem;
+				color: var(--cream);
+				background: rgba(0, 0, 0, 0.3);
+				padding: 0.12em 0.45em;
 				border-radius: 4px;
-				font-family: monospace;
-				font-size: 14px;
-				margin-top: 1rem;
-				white-space: pre-wrap;
+				word-break: break-word;
+			}
+
+			/* ---- Footer ---- */
+			footer {
+				max-width: 1100px;
+				margin: 0 auto;
+				padding: 2rem 1.5rem 4rem;
+				border-top: 1px solid var(--border);
+				text-align: center;
+			}
+
+			footer p {
+				font-family: 'Courier New', monospace;
+				font-size: 0.72rem;
+				color: var(--text-dim);
+				letter-spacing: 0.04em;
+			}
+
+			/* ---- Responsive ---- */
+			@media (max-width: 640px) {
+				.demo-section {
+					padding: 2rem 1.5rem;
+				}
+				.demo-stage {
+					padding: 1.75rem 1.5rem;
+				}
+				.demos {
+					gap: 4rem;
+				}
+				.install-banner {
+					gap: 1.5rem;
+				}
+				.ref-row {
+					grid-template-columns: 1fr;
+					gap: 0.35rem;
+				}
+				.ref-row.ref-head {
+					display: none;
+				}
 			}
 		</style>
 	</head>
 	<body>
-		<h1>Quantity Input Demo</h1>
+		<!-- ======== HERO ======== -->
+		<header class="hero">
+			<a
+				class="hero-badge"
+				href="https://github.com/magic-spells/quantity-input"
+				target="_blank"
+				rel="noopener"
+				>@magic-spells/quantity-input</a
+			>
+			<h1>Minus, <em>plus</em>, done.</h1>
+			<p class="hero-tagline">
+				A quantity stepper that owns the clamping, the bounds and the disabled states — and
+				nothing else. You bring the markup.
+			</p>
+			<div class="hero-line"></div>
+		</header>
 
-		<div class="demo-section">
-			<h3>Default Settings</h3>
-			<p>Default min=1, value=1</p>
-
-			<quantity-input>
-				<button data-action-decrement type="button">−</button>
-				<input type="number" />
-				<button data-action-increment type="button">+</button>
-			</quantity-input>
-
-			<div class="code-example">&lt;quantity-input&gt;
-  &lt;button data-action-decrement type="button"&gt;−&lt;/button&gt;
-  &lt;input type="number" /&gt;
-  &lt;button data-action-increment type="button"&gt;+&lt;/button&gt;
-&lt;/quantity-input&gt;</div>
+		<!-- ======== INSTALL ======== -->
+		<div class="install-banner">
+			<div class="install-item">
+				<span class="install-label">Install</span>
+				<code class="install-value">npm i @magic-spells/quantity-input</code>
+			</div>
+		</div>
+		<div class="install-specs">
+			<div class="install-item">
+				<span class="install-label">JS (gzip)</span>
+				<span class="install-size">1.3 KB</span>
+			</div>
+			<div class="install-item">
+				<span class="install-label">CSS (gzip)</span>
+				<span class="install-size">0.4 KB</span>
+			</div>
+			<div class="install-item">
+				<span class="install-label">Dependencies</span>
+				<span class="install-size">0</span>
+			</div>
 		</div>
 
-		<div class="demo-section">
-			<h3>Custom Min/Max</h3>
-			<p>Min=5, Max=15, Value=10</p>
-			<quantity-input min="5" max="15" value="10">
-				<button data-action-decrement type="button">−</button>
-				<input type="number" />
-				<button data-action-increment type="button">+</button>
-			</quantity-input>
-			<div class="code-example">&lt;quantity-input min="5" max="15" value="10"&gt;
-  &lt;button data-action-decrement type="button"&gt;−&lt;/button&gt;
-  &lt;input type="number" /&gt;
-  &lt;button data-action-increment type="button"&gt;+&lt;/button&gt;
-&lt;/quantity-input&gt;</div>
+		<!-- ======== QUICK START ======== -->
+		<div class="quick-start">
+			<div class="code-block code-block-wide">
+<span class="hl-cm">// install</span>
+npm i @magic-spells/quantity-input
+
+<span class="hl-cm">// import (auto-registers the &lt;quantity-input&gt; element)</span>
+<span class="hl-tag">import</span> <span class="hl-val">'@magic-spells/quantity-input'</span>
+<span class="hl-tag">import</span> <span class="hl-val">'@magic-spells/quantity-input/styles'</span> <span class="hl-cm">// optional defaults</span>
+
+<span class="hl-cm">// use it — you provide the buttons and the input</span>
+&lt;<span class="hl-tag">quantity-input</span> <span class="hl-attr">min</span>=<span class="hl-val">"1"</span> <span class="hl-attr">max</span>=<span class="hl-val">"10"</span> <span class="hl-attr">value</span>=<span class="hl-val">"5"</span>&gt;
+  &lt;<span class="hl-tag">button</span> <span class="hl-attr">data-action-decrement</span> <span class="hl-attr">type</span>=<span class="hl-val">"button"</span>&gt;&minus;&lt;/<span class="hl-tag">button</span>&gt;
+  &lt;<span class="hl-tag">input</span> <span class="hl-attr">type</span>=<span class="hl-val">"number"</span> /&gt;
+  &lt;<span class="hl-tag">button</span> <span class="hl-attr">data-action-increment</span> <span class="hl-attr">type</span>=<span class="hl-val">"button"</span>&gt;+&lt;/<span class="hl-tag">button</span>&gt;
+&lt;/<span class="hl-tag">quantity-input</span>&gt;
+			</div>
 		</div>
 
-		<div class="demo-section">
-			<h3>Step</h3>
-			<p>Min=0, Max=20, Value=0, Step=5 — buttons move by 5 and clamp at both ends</p>
-			<quantity-input id="step-demo" min="0" max="20" value="0" step="5">
-				<button data-action-decrement type="button">−</button>
-				<input type="number" />
-				<button data-action-increment type="button">+</button>
-			</quantity-input>
-			<div class="code-example">&lt;quantity-input min="0" max="20" value="0" step="5"&gt;
-  &lt;button data-action-decrement type="button"&gt;−&lt;/button&gt;
-  &lt;input type="number" /&gt;
-  &lt;button data-action-increment type="button"&gt;+&lt;/button&gt;
-&lt;/quantity-input&gt;</div>
-		</div>
+		<!-- ======== DEMOS ======== -->
+		<main class="demos">
+			<!-- ---- 01 Bounds ---- -->
+			<section class="demo-section">
+				<h2>Bounds it can't leave.</h2>
+				<p class="demo-desc">
+					<code>min</code> defaults to <code>1</code>, <code>max</code> is open-ended, and
+					<code>value</code> starts at the minimum. Each button disables itself at its own bound —
+					typing out of range snaps back on commit.
+				</p>
+				<div class="demo-stage">
+					<div class="stage-item">
+						<span class="stage-label">defaults</span>
+						<quantity-input>
+							<button data-action-decrement type="button">&minus;</button>
+							<input type="number" />
+							<button data-action-increment type="button">+</button>
+						</quantity-input>
+					</div>
+					<div class="stage-item">
+						<span class="stage-label">min 5 · max 15 · value 10</span>
+						<quantity-input min="5" max="15" value="10">
+							<button data-action-decrement type="button">&minus;</button>
+							<input type="number" />
+							<button data-action-increment type="button">+</button>
+						</quantity-input>
+					</div>
+					<div class="stage-item">
+						<span class="stage-label">min 0 · value 0</span>
+						<quantity-input min="0" value="0">
+							<button data-action-decrement type="button">&minus;</button>
+							<input type="number" />
+							<button data-action-increment type="button">+</button>
+						</quantity-input>
+					</div>
+				</div>
+				<div class="code-block">&lt;<span class="hl-tag">quantity-input</span> <span class="hl-attr">min</span>=<span class="hl-val">"5"</span> <span class="hl-attr">max</span>=<span class="hl-val">"15"</span> <span class="hl-attr">value</span>=<span class="hl-val">"10"</span>&gt;…&lt;/<span class="hl-tag">quantity-input</span>&gt;</div>
+			</section>
 
-		<div class="demo-section">
-			<h3>Disabled</h3>
-			<p>Buttons and the input are inert while the host carries <code>disabled</code></p>
-			<quantity-input id="disabled-demo" min="1" max="10" value="3" disabled>
-				<button data-action-decrement type="button">−</button>
-				<input type="number" />
-				<button data-action-increment type="button">+</button>
-			</quantity-input>
-			<button type="button" id="toggle-disabled">Toggle disabled</button>
-			<div class="code-example">&lt;quantity-input min="1" max="10" value="3" disabled&gt;
-  &lt;button data-action-decrement type="button"&gt;−&lt;/button&gt;
-  &lt;input type="number" /&gt;
-  &lt;button data-action-increment type="button"&gt;+&lt;/button&gt;
-&lt;/quantity-input&gt;</div>
-		</div>
+			<!-- ---- 02 Step ---- -->
+			<section class="demo-section">
+				<h2>Count by <em>sixes</em>.</h2>
+				<p class="demo-desc">
+					<code>step</code> sets how much each press moves. Clamping still wins at the edges, so a
+					step that would overshoot lands on <code>max</code> instead.
+				</p>
+				<div class="demo-stage">
+					<div class="stage-item">
+						<span class="stage-label">step 6 · case of six</span>
+						<quantity-input min="0" max="24" value="0" step="6">
+							<button data-action-decrement type="button">&minus;</button>
+							<input type="number" />
+							<button data-action-increment type="button">+</button>
+						</quantity-input>
+					</div>
+					<div class="stage-item">
+						<span class="stage-label">step 5 · max 22 (clamps short)</span>
+						<quantity-input min="0" max="22" value="15" step="5">
+							<button data-action-decrement type="button">&minus;</button>
+							<input type="number" />
+							<button data-action-increment type="button">+</button>
+						</quantity-input>
+					</div>
+				</div>
+				<div class="code-block">&lt;<span class="hl-tag">quantity-input</span> <span class="hl-attr">min</span>=<span class="hl-val">"0"</span> <span class="hl-attr">max</span>=<span class="hl-val">"24"</span> <span class="hl-attr">value</span>=<span class="hl-val">"0"</span> <span class="hl-attr">step</span>=<span class="hl-val">"6"</span>&gt;…&lt;/<span class="hl-tag">quantity-input</span>&gt;</div>
+			</section>
 
-		<div class="demo-section">
-			<h3>Custom Icons</h3>
-			<p>You can use any icons for the buttons</p>
+			<!-- ---- 03 Disabled ---- -->
+			<section class="demo-section">
+				<h2>Out of stock.</h2>
+				<p class="demo-desc">
+					<code>disabled</code> on the host disables both buttons and the input, and every handler
+					no-ops. Toggle it as a property from JavaScript.
+				</p>
+				<div class="demo-stage">
+					<div class="stage-item">
+						<span class="stage-label">disabled</span>
+						<quantity-input id="disabled-demo" min="1" max="10" value="3" disabled>
+							<button data-action-decrement type="button">&minus;</button>
+							<input type="number" />
+							<button data-action-increment type="button">+</button>
+						</quantity-input>
+					</div>
+				</div>
+				<div class="controls">
+					<button class="btn" type="button" id="toggle-disabled">Toggle disabled</button>
+				</div>
+				<div class="code-block">el.disabled = !el.disabled <span class="hl-cm">// or the `disabled` attribute</span></div>
+			</section>
 
-			<quantity-input min="0" max="100" value="50">
-				<button data-action-decrement type="button">
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-						<path
-							fill="currentColor"
-							d="M368 224H16c-8.84 0-16 7.16-16 16v32c0 8.84 7.16 16 16 16h352c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16z"></path>
-					</svg>
-				</button>
-				<input type="number" />
-				<button data-action-increment type="button">
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-						<path
-							fill="currentColor"
-							d="M368 224H224V80c0-8.84-7.16-16-16-16h-32c-8.84 0-16 7.16-16 16v144H16c-8.84 0-16 7.16-16 16v32c0 8.84 7.16 16 16 16h144v144c0 8.84 7.16 16 16 16h32c8.84 0 16-7.16 16-16V288h144c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16z"></path>
-					</svg>
-				</button>
-			</quantity-input>
-		</div>
+			<!-- ---- 04 Enter ---- -->
+			<section class="demo-section">
+				<h2>Enter commits. Nothing <em>submits</em>.</h2>
+				<p class="demo-desc">
+					This is a real <code>&lt;form&gt;</code>. Type a quantity and press Enter — the value is
+					committed and the keypress is swallowed, so the form never implicitly submits. The button
+					still does.
+				</p>
+				<form class="demo-stage stack" id="enter-form">
+					<div class="form-row">
+						<div class="stage-item">
+							<span class="stage-label">Discount code</span>
+							<input class="text-field" type="text" name="code" placeholder="SPRING25" />
+						</div>
+						<div class="stage-item">
+							<span class="stage-label">Quantity — press Enter here</span>
+							<quantity-input min="1" max="99" value="1">
+								<button data-action-decrement type="button">&minus;</button>
+								<input type="number" />
+								<button data-action-increment type="button">+</button>
+							</quantity-input>
+						</div>
+						<button class="btn" type="submit">Submit</button>
+					</div>
+					<p class="submit-note">form submits: <b id="submit-count">0</b></p>
+				</form>
+				<div class="code-block">
+<span class="hl-cm">// inside the component</span>
+<span class="hl-tag">if</span> (e.key === <span class="hl-val">'Enter'</span>) { e.preventDefault(); commit(); }</div>
+			</section>
 
-		<div class="demo-section">
-			<h3>Multiple Instances</h3>
-			<p>Testing multiple components on the same page:</p>
-			<quantity-input min="1" max="5" value="2">
-				<button data-action-decrement type="button">−</button>
-				<input type="number" />
-				<button data-action-increment type="button">+</button>
-			</quantity-input>
-			<quantity-input min="10" max="20" value="15">
-				<button data-action-decrement type="button">−</button>
-				<input type="number" />
-				<button data-action-increment type="button">+</button>
-			</quantity-input>
-			<quantity-input min="1" max="3">
-				<button data-action-decrement type="button">−</button>
-				<input type="number" />
-				<button data-action-increment type="button">+</button>
-			</quantity-input>
-		</div>
+			<!-- ---- 05 Events ---- -->
+			<section class="demo-section">
+				<h2>Listen in.</h2>
+				<p class="demo-desc">
+					Every committed change fires a bubbling <code>quantity-input:change</code> with
+					<code>{ value }</code>. Clamped input and no-op presses stay quiet.
+				</p>
+				<div class="demo-stage">
+					<div class="stage-item">
+						<span class="stage-label">min 1 · max 10 · value 5</span>
+						<quantity-input id="event-demo" min="1" max="10" value="5">
+							<button data-action-decrement type="button">&minus;</button>
+							<input type="number" />
+							<button data-action-increment type="button">+</button>
+						</quantity-input>
+					</div>
+				</div>
+				<div class="event-log" id="event-log"></div>
+				<div class="code-block">el.addEventListener(<span class="hl-val">'quantity-input:change'</span>, (e) =&gt; {
+  console.log(e.detail) <span class="hl-cm">// { value: 6 }</span>
+})</div>
+			</section>
 
-		<div class="demo-section">
-			<h3>Event Logging</h3>
-			<p>Watch the console or the log below for quantity-input:change events:</p>
-			<quantity-input min="1" max="10" value="5" id="event-demo">
-				<button data-action-decrement type="button">−</button>
-				<input type="number" />
-				<button data-action-increment type="button">+</button>
-			</quantity-input>
-			<div class="event-log" id="eventLog">Event log will appear here...</div>
-		</div>
+			<!-- ---- 06 Multiple instances ---- -->
+			<section class="demo-section">
+				<h2>One cart, many <em>steppers</em>.</h2>
+				<p class="demo-desc">
+					Instances are fully independent — separate bounds, separate state. The subtotal listens
+					once, on the list, because the event bubbles.
+				</p>
+				<div class="demo-stage stack" id="cart">
+					<div class="cart-line">
+						<div>
+							<div class="cart-name">Ceramic mug</div>
+							<div class="cart-price">$18.00 · max 6</div>
+						</div>
+						<quantity-input min="1" max="6" value="2" data-price="18">
+							<button data-action-decrement type="button">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" aria-hidden="true">
+									<path
+										fill="currentColor"
+										d="M368 224H16c-8.84 0-16 7.16-16 16v32c0 8.84 7.16 16 16 16h352c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16z"></path>
+								</svg>
+							</button>
+							<input type="number" />
+							<button data-action-increment type="button">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" aria-hidden="true">
+									<path
+										fill="currentColor"
+										d="M368 224H224V80c0-8.84-7.16-16-16-16h-32c-8.84 0-16 7.16-16 16v144H16c-8.84 0-16 7.16-16 16v32c0 8.84 7.16 16 16 16h144v144c0 8.84 7.16 16 16 16h32c8.84 0 16-7.16 16-16V288h144c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16z"></path>
+								</svg>
+							</button>
+						</quantity-input>
+					</div>
+					<div class="cart-line">
+						<div>
+							<div class="cart-name">Espresso beans</div>
+							<div class="cart-price">$22.00 · step 2</div>
+						</div>
+						<quantity-input min="0" max="12" value="2" step="2" data-price="22">
+							<button data-action-decrement type="button">&minus;</button>
+							<input type="number" />
+							<button data-action-increment type="button">+</button>
+						</quantity-input>
+					</div>
+					<div class="cart-line">
+						<div>
+							<div class="cart-name">Gift box</div>
+							<div class="cart-price">$9.00 · one per order</div>
+						</div>
+						<quantity-input min="0" max="1" value="1" data-price="9">
+							<button data-action-decrement type="button">&minus;</button>
+							<input type="number" />
+							<button data-action-increment type="button">+</button>
+						</quantity-input>
+					</div>
+					<div class="cart-total">
+						<span>Subtotal</span>
+						<span id="cart-total">$0.00</span>
+					</div>
+				</div>
+			</section>
+
+			<!-- ---- 07 Reference ---- -->
+			<section class="demo-section">
+				<h2>The whole API, on one screen.</h2>
+				<p class="demo-desc">
+					Five attributes, all mirrored as properties, and one event. That's everything.
+				</p>
+
+				<h3 class="ref-heading">Attributes &amp; Properties</h3>
+				<div class="ref-table">
+					<div class="ref-row ref-head">
+						<div>Name</div>
+						<div>Default</div>
+						<div>Description</div>
+					</div>
+					<div class="ref-row">
+						<div><code>min</code></div>
+						<div><code>1</code></div>
+						<div>Lowest allowed value · <code>0</code> is valid</div>
+					</div>
+					<div class="ref-row">
+						<div><code>max</code></div>
+						<div><code>null</code></div>
+						<div>Highest allowed value · omit for unlimited</div>
+					</div>
+					<div class="ref-row">
+						<div><code>value</code></div>
+						<div><code>min</code></div>
+						<div>Current quantity, clamped to the bounds</div>
+					</div>
+					<div class="ref-row">
+						<div><code>step</code></div>
+						<div><code>1</code></div>
+						<div>Amount each press adds or subtracts · positive integers only</div>
+					</div>
+					<div class="ref-row">
+						<div><code>disabled</code></div>
+						<div><code>false</code></div>
+						<div>Disables both buttons and the input; handlers no-op</div>
+					</div>
+				</div>
+
+				<h3 class="ref-heading">Markup hooks &amp; Events</h3>
+				<div class="ref-table">
+					<div class="ref-row ref-head">
+						<div>Name</div>
+						<div>Type</div>
+						<div>Description</div>
+					</div>
+					<div class="ref-row">
+						<div><code>[data-action-decrement]</code></div>
+						<div>hook</div>
+						<div>Any element that should subtract a step</div>
+					</div>
+					<div class="ref-row">
+						<div><code>[data-action-increment]</code></div>
+						<div>hook</div>
+						<div>Any element that should add a step</div>
+					</div>
+					<div class="ref-row">
+						<div><code>input</code></div>
+						<div>hook</div>
+						<div>The first descendant input · typed values commit on change or Enter</div>
+					</div>
+					<div class="ref-row">
+						<div><code>quantity-input:change</code></div>
+						<div>event</div>
+						<div>Bubbles on every committed change · detail <code>{ value }</code></div>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<footer>
+			<p>&copy; 2026 Magic Spells · MIT License</p>
+		</footer>
 
 		<script type="module" src="quantity-input.esm.js"></script>
-		<script>
-			// Event logging demo
-			const eventDemo = document.getElementById('event-demo');
-			const eventLog = document.getElementById('eventLog');
-
-			eventDemo.addEventListener('quantity-input:change', (e) => {
-				const timestamp = new Date().toLocaleTimeString();
-				const logEntry = `[${timestamp}] quantity-input:change: ${e.detail.value}`;
-				console.log(logEntry);
-
-				// Add to visual log
-				const div = document.createElement('div');
-				div.textContent = logEntry;
-				eventLog.appendChild(div);
-				eventLog.scrollTop = eventLog.scrollHeight;
+		<script type="module">
+			// ---- Copy install command ----
+			const installValue = document.querySelector('.install-value');
+			installValue.addEventListener('click', () => {
+				navigator.clipboard.writeText(installValue.textContent.trim()).then(() => {
+					const original = installValue.textContent;
+					installValue.textContent = 'Copied!';
+					setTimeout(() => {
+						installValue.textContent = original;
+					}, 1500);
+				});
 			});
 
-			// Clear log initially
-			eventLog.innerHTML = '';
-
-			// Disabled toggle demo
+			// ---- 03 Disabled ----
 			const disabledDemo = document.getElementById('disabled-demo');
 			document.getElementById('toggle-disabled').addEventListener('click', () => {
 				disabledDemo.disabled = !disabledDemo.disabled;
 			});
 
-			// Listen to all quantity inputs for console logging
-			document.addEventListener('quantity-input:change', (e) => {
-				if (e.target !== eventDemo) {
-					console.log('Quantity changed:', e.detail.value, 'from element:', e.target);
-				}
+			// ---- 04 Enter ----
+			// Counts real submits only, so an Enter in the quantity field that got
+			// through would be visible here.
+			const submitCount = document.getElementById('submit-count');
+			document.getElementById('enter-form').addEventListener('submit', (e) => {
+				e.preventDefault();
+				submitCount.textContent = Number(submitCount.textContent) + 1;
 			});
+
+			// ---- 05 Events ----
+			const eventLog = document.getElementById('event-log');
+			document
+				.getElementById('event-demo')
+				.addEventListener('quantity-input:change', (e) => {
+					const line = document.createElement('div');
+					line.innerHTML = `<i>${new Date().toLocaleTimeString()}</i> quantity-input:change → <b>${e.detail.value}</b>`;
+					eventLog.appendChild(line);
+					eventLog.scrollTop = eventLog.scrollHeight;
+				});
+
+			// ---- 06 Cart ----
+			const cart = document.getElementById('cart');
+			const cartTotal = document.getElementById('cart-total');
+			const renderTotal = () => {
+				const sum = [...cart.querySelectorAll('quantity-input')].reduce(
+					(total, el) => total + el.value * Number(el.dataset.price),
+					0
+				);
+				cartTotal.textContent = `$${sum.toFixed(2)}`;
+			};
+			// One listener for three steppers — the change event bubbles.
+			cart.addEventListener('quantity-input:change', renderTotal);
+			await customElements.whenDefined('quantity-input');
+			renderTotal();
 		</script>
 	</body>
 </html>
