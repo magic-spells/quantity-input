@@ -48,3 +48,12 @@ quantity-input input {
 quantity-input input:focus {
   outline: none;
 }
+
+quantity-input[disabled] {
+  opacity: 0.5;
+}
+
+quantity-input button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

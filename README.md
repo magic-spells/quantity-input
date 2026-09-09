@@ -47,7 +47,7 @@ You provide your own markup inside the component. The component looks for:
 - An `input` element for the quantity value
 
 ```html
-<!-- Basic usage (defaults to value=1, min=1) -->
+<!-- Basic usage (defaults to min=1, value=min) -->
 <quantity-input>
   <button data-action-decrement type="button">−</button>
   <input type="number" />
@@ -71,6 +71,20 @@ You provide your own markup inside the component. The component looks for:
     <svg><!-- your plus icon --></svg>
   </button>
 </quantity-input>
+
+<!-- Stepping by 5, clamped at 50 -->
+<quantity-input min="0" max="50" value="10" step="5">
+  <button data-action-decrement type="button">−</button>
+  <input type="number" />
+  <button data-action-increment type="button">+</button>
+</quantity-input>
+
+<!-- Disabled: buttons and input are inert -->
+<quantity-input min="1" max="10" value="3" disabled>
+  <button data-action-decrement type="button">−</button>
+  <input type="number" />
+  <button data-action-increment type="button">+</button>
+</quantity-input>
 ```
 
 Note: The `value` attribute on the inner `<input>` is optional and will be overwritten by the component. Set the value on the `<quantity-input>` element instead.
@@ -79,8 +93,8 @@ Note: The `value` attribute on the inner `<input>` is optional and will be overw
 
 The quantity input component provides three ways to modify quantities:
 
-- **Decrement button**: Reduces quantity by 1 (respects min value)
-- **Increment button**: Increases quantity by 1 (respects max value)
+- **Decrement button**: Reduces quantity by `step` (respects min value)
+- **Increment button**: Increases quantity by `step` (respects max value)
 - **Direct input**: Users can type quantities directly (automatically clamped to min/max)
 
 The component emits `quantity-input:change` events when the value changes, allowing parent components to react to quantity updates.
@@ -89,17 +103,54 @@ The component emits `quantity-input:change` events when the value changes, allow
 
 ### Attributes
 
-| Attribute | Description                    | Default | Required |
-| --------- | ------------------------------ | ------- | -------- |
-| `min`     | Minimum allowed quantity       | 1       | No       |
-| `max`     | Maximum allowed quantity       | none    | No       |
-| `value`   | Initial/current quantity value | 1       | No       |
+| Attribute  | Description                                             | Default | Required |
+| ---------- | ------------------------------------------------------- | ------- | -------- |
+| `min`      | Minimum allowed quantity (`0` is allowed)               | 1       | No       |
+| `max`      | Maximum allowed quantity                                | none    | No       |
+| `value`    | Initial/current quantity value                          | `min`   | No       |
+| `step`     | Amount each button press adds or subtracts              | 1       | No       |
+| `disabled` | Disables both buttons and the input; blocks all changes | absent  | No       |
+
+**Zero is a real value.** `min="0"` and `value="0"` round-trip exactly — a cart
+stepper can be decremented all the way to `0`. When the `value` attribute is
+absent (or non-numeric), the component starts at the current `min`.
+
+**`step`** must be a positive integer. Decimals are truncated (`step="2.7"` →
+`2`, the same `parseInt` semantics `min`/`max`/`value` use) and `0`, negatives
+and non-numeric junk all fall back to `1`. Values stay integers — there is no
+decimal mode. Clamping is applied after stepping, so a step that would overshoot
+`min`/`max` lands exactly on the bound.
+
+**`disabled`** is observed and reflected (`el.disabled = true` sets the
+attribute, and removing the attribute clears the property). While it is set, the
+increment/decrement handlers and the typed-value commit all no-op.
+
+**The component owns `disabled` on the decrement/increment buttons and the
+input:** host `disabled` disables all three, and the buttons are additionally
+disabled at `min`/`max` — the decrement button at the minimum, the increment
+button at the maximum. That state is recomputed on every sync (connect, any
+observed attribute change, and every committed value), so a `disabled` you put
+on one of those elements yourself is not preserved — set it on the
+`<quantity-input>` host instead.
 
 ### Events
 
-| Event Name            | Description                     | Detail Properties |
-| --------------------- | ------------------------------- | ----------------- |
+| Event Name              | Description                     | Detail Properties |
+| ----------------------- | ------------------------------- | ----------------- |
 | `quantity-input:change` | Triggered when quantity changes | `{ value }`       |
+
+The event bubbles and fires **only on real user changes** (a button press, or a
+typed value committed on `change`/Enter). Writing the value programmatically —
+`el.value = 5`, or `setAttribute('value', '5')` — updates the input but
+dispatches nothing, so a framework wrapper can push state down without an echo
+loop.
+
+### Input behavior
+
+- Typed values are clamped to `min`/`max` on commit.
+- An empty or non-numeric entry (e.g. `abc`) snaps the field back to the current
+  value on commit rather than staying dirty.
+- Pressing Enter commits the value and does **not** submit an enclosing `<form>`.
 
 ### Required Markup
 
@@ -160,9 +211,11 @@ quantity-input input {
 
 #### Properties
 
-- `min`: Get/set the minimum allowed value
-- `max`: Get/set the maximum allowed value
+- `min`: Get/set the minimum allowed value (`0` is valid)
+- `max`: Get/set the maximum allowed value (`null` removes the ceiling)
 - `value`: Get/set the current quantity value
+- `step`: Get/set the button step (positive integer, default 1)
+- `disabled`: Get/set the disabled state (reflected to the `disabled` attribute)
 
 #### Events
 
@@ -172,6 +225,7 @@ The component emits custom events that bubble up for parent components to handle
 
 - Triggered when quantity value changes via buttons or direct input
 - `event.detail`: `{ value }`
+- Never dispatched for programmatic writes (`el.value = n`, `setAttribute`)
 
 #### Programmatic Control
 
